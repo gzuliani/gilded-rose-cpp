@@ -24,252 +24,248 @@ ItemPtr make_backstage_pass(int sellIn, int quality) {
 
 TEST_CASE("At the end of each day SellIn and Quality decrease for every item")
 {
-    std::vector<ItemPtr> items{
-        make_item("A Generic Item", 2, 5)};
-    GildedRose gilded_rose{items};
+    RegularItem item{"A Generic Item", 2, 5};
 
-    REQUIRE(items[0]->sellIn == 2);
-    REQUIRE(items[0]->quality == 5);
+    REQUIRE(item.sellIn == 2);
+    REQUIRE(item.quality == 5);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 1);
-    REQUIRE(items[0]->quality == 4);
+    item.update();
+    REQUIRE(item.sellIn == 1);
+    REQUIRE(item.quality == 4);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 0);
-    REQUIRE(items[0]->quality == 3);
+    item.update();
+    REQUIRE(item.sellIn == 0);
+    REQUIRE(item.quality == 3);
 }
 
 TEST_CASE("Quality decreases twice as fast once the sell by date has passed")
 {
-    std::vector<ItemPtr> items{
-        make_item("A Generic Item", 1, 9)};
-    GildedRose gilded_rose{items};
+    RegularItem item{"A Generic Item", 1, 9};
 
-    REQUIRE(items[0]->sellIn == 1);
-    REQUIRE(items[0]->quality == 9);
+    REQUIRE(item.sellIn == 1);
+    REQUIRE(item.quality == 9);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 0);
-    REQUIRE(items[0]->quality == 8);
+    item.update();
+    REQUIRE(item.sellIn == 0);
+    REQUIRE(item.quality == 8);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == -1);
-    REQUIRE(items[0]->quality == 6);
+    item.update();
+    REQUIRE(item.sellIn == -1);
+    REQUIRE(item.quality == 6);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == -2);
-    REQUIRE(items[0]->quality == 4);
+    item.update();
+    REQUIRE(item.sellIn == -2);
+    REQUIRE(item.quality == 4);
 }
 
 TEST_CASE("The Quality of an item is never negative")
 {
-    std::vector<ItemPtr> items{
-        make_item("A Generic Item", 3, 2)};
-    GildedRose gilded_rose{items};
+    RegularItem item{"A Generic Item", 3, 2};
 
-    REQUIRE(items[0]->sellIn == 3);
-    REQUIRE(items[0]->quality == 2);
+    REQUIRE(item.sellIn == 3);
+    REQUIRE(item.quality == 2);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 2);
-    REQUIRE(items[0]->quality == 1);
+    item.update();
+    REQUIRE(item.sellIn == 2);
+    REQUIRE(item.quality == 1);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 1);
-    REQUIRE(items[0]->quality == 0);
+    item.update();
+    REQUIRE(item.sellIn == 1);
+    REQUIRE(item.quality == 0);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 0);
-    REQUIRE(items[0]->quality == 0);
+    item.update();
+    REQUIRE(item.sellIn == 0);
+    REQUIRE(item.quality == 0);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == -1);
-    REQUIRE(items[0]->quality == 0);
+    item.update();
+    REQUIRE(item.sellIn == -1);
+    REQUIRE(item.quality == 0);
 }
 
 TEST_CASE("'Aged Brie' actually increases in Quality the older it gets")
 {
-    std::vector<ItemPtr> items{
-        make_aged_brie(3, 2)};
-    GildedRose gilded_rose{items};
+    AgedBrie item{3, 2};
 
-    REQUIRE(items[0]->sellIn == 3);
-    REQUIRE(items[0]->quality == 2);
+    REQUIRE(item.sellIn == 3);
+    REQUIRE(item.quality == 2);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 2);
-    REQUIRE(items[0]->quality == 3);
+    item.update();
+    REQUIRE(item.sellIn == 2);
+    REQUIRE(item.quality == 3);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 1);
-    REQUIRE(items[0]->quality == 4);
+    item.update();
+    REQUIRE(item.sellIn == 1);
+    REQUIRE(item.quality == 4);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 0);
-    REQUIRE(items[0]->quality == 5);
+    item.update();
+    REQUIRE(item.sellIn == 0);
+    REQUIRE(item.quality == 5);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == -1);
-    REQUIRE(items[0]->quality == 7);
+    item.update();
+    REQUIRE(item.sellIn == -1);
+    REQUIRE(item.quality == 7);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == -2);
-    REQUIRE(items[0]->quality == 9);
+    item.update();
+    REQUIRE(item.sellIn == -2);
+    REQUIRE(item.quality == 9);
 }
 
 TEST_CASE("The Quality of an item is never more than 50 - 'Aged Brie'")
 {
-    std::vector<ItemPtr> items{
-        make_aged_brie(3, 48)};
-    GildedRose gilded_rose{items};
+    AgedBrie item{3, 48};
 
-    REQUIRE(items[0]->quality == 48);
+    REQUIRE(item.quality == 48);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->quality == 49);
+    item.update();
+    REQUIRE(item.quality == 49);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->quality == 50);
+    item.update();
+    REQUIRE(item.quality == 50);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->quality == 50);
+    item.update();
+    REQUIRE(item.quality == 50);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->quality == 50);
+    item.update();
+    REQUIRE(item.quality == 50);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->quality == 50);
+    item.update();
+    REQUIRE(item.quality == 50);
 }
 
 TEST_CASE("'Sulfuras' never has to be sold or decreases in Quality")
 {
-    std::vector<ItemPtr> items{
-        make_sulfuras(1)};
-    GildedRose gilded_rose{items};
+    Sulfuras item{1};
 
-    REQUIRE(items[0]->sellIn == 1);
-    REQUIRE(items[0]->quality == 80);
+    REQUIRE(item.sellIn == 1);
+    REQUIRE(item.quality == 80);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 1);
-    REQUIRE(items[0]->quality == 80);
+    item.update();
+    REQUIRE(item.sellIn == 1);
+    REQUIRE(item.quality == 80);
 }
 
 TEST_CASE("'Backstage passes' increases in Quality as SellIn value approaches")
 {
-    std::vector<ItemPtr> items{
-        make_backstage_pass(20, 3)};
-    GildedRose gilded_rose{items};
+    BackstagePass item{20, 3};
 
-    REQUIRE(items[0]->sellIn == 20);
-    REQUIRE(items[0]->quality == 3);
+    REQUIRE(item.sellIn == 20);
+    REQUIRE(item.quality == 3);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 19);
-    REQUIRE(items[0]->quality == 4);
+    item.update();
+    REQUIRE(item.sellIn == 19);
+    REQUIRE(item.quality == 4);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 18);
-    REQUIRE(items[0]->quality == 5);
+    item.update();
+    REQUIRE(item.sellIn == 18);
+    REQUIRE(item.quality == 5);
 }
 
 TEST_CASE("'Backstage passes' Quality increases by 2 if SellIn is 10 or less")
 {
-    std::vector<ItemPtr> items{
-        make_backstage_pass(11, 3)};
-    GildedRose gilded_rose{items};
+    BackstagePass item{11, 3};
 
-    REQUIRE(items[0]->sellIn == 11);
-    REQUIRE(items[0]->quality == 3);
+    REQUIRE(item.sellIn == 11);
+    REQUIRE(item.quality == 3);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 10);
-    REQUIRE(items[0]->quality == 4);
+    item.update();
+    REQUIRE(item.sellIn == 10);
+    REQUIRE(item.quality == 4);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 9);
-    REQUIRE(items[0]->quality == 6);
+    item.update();
+    REQUIRE(item.sellIn == 9);
+    REQUIRE(item.quality == 6);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 8);
-    REQUIRE(items[0]->quality == 8);
+    item.update();
+    REQUIRE(item.sellIn == 8);
+    REQUIRE(item.quality == 8);
 }
 
 TEST_CASE("'Backstage passes' Quality increases by 3 if SellIn is 5 or less")
 {
-    std::vector<ItemPtr> items{
-        make_backstage_pass(6, 3)};
-    GildedRose gilded_rose{items};
+    BackstagePass item{6, 3};
 
-    REQUIRE(items[0]->sellIn == 6);
-    REQUIRE(items[0]->quality == 3);
+    REQUIRE(item.sellIn == 6);
+    REQUIRE(item.quality == 3);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 5);
-    REQUIRE(items[0]->quality == 5);
+    item.update();
+    REQUIRE(item.sellIn == 5);
+    REQUIRE(item.quality == 5);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 4);
-    REQUIRE(items[0]->quality == 8);
+    item.update();
+    REQUIRE(item.sellIn == 4);
+    REQUIRE(item.quality == 8);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 3);
-    REQUIRE(items[0]->quality == 11);
+    item.update();
+    REQUIRE(item.sellIn == 3);
+    REQUIRE(item.quality == 11);
 }
 
 TEST_CASE("The Quality of an item is never more than 50 - 'Backstage passes'")
 {
-    std::vector<ItemPtr> items{
-        make_backstage_pass(3, 48)};
-    GildedRose gilded_rose{items};
+    BackstagePass item{3, 48};
 
-    REQUIRE(items[0]->sellIn == 3);
-    REQUIRE(items[0]->quality == 48);
+    REQUIRE(item.sellIn == 3);
+    REQUIRE(item.quality == 48);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 2);
-    REQUIRE(items[0]->quality == 50);
+    item.update();
+    REQUIRE(item.sellIn == 2);
+    REQUIRE(item.quality == 50);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 1);
-    REQUIRE(items[0]->quality == 50);
+    item.update();
+    REQUIRE(item.sellIn == 1);
+    REQUIRE(item.quality == 50);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 0);
-    REQUIRE(items[0]->quality == 50);
+    item.update();
+    REQUIRE(item.sellIn == 0);
+    REQUIRE(item.quality == 50);
 }
 
 TEST_CASE("'Backstage passes' Quality drops to 0 after the concert")
 {
-    std::vector<ItemPtr> items{
-        make_backstage_pass(2, 3)};
-    GildedRose gilded_rose{items};
+    BackstagePass item{2, 3};
 
-    REQUIRE(items[0]->sellIn == 2);
-    REQUIRE(items[0]->quality == 3);
+    REQUIRE(item.sellIn == 2);
+    REQUIRE(item.quality == 3);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 1);
-    REQUIRE(items[0]->quality == 6);
+    item.update();
+    REQUIRE(item.sellIn == 1);
+    REQUIRE(item.quality == 6);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == 0);
-    REQUIRE(items[0]->quality == 9);
+    item.update();
+    REQUIRE(item.sellIn == 0);
+    REQUIRE(item.quality == 9);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->sellIn == -1);
-    REQUIRE(items[0]->quality == 0);
+    item.update();
+    REQUIRE(item.sellIn == -1);
+    REQUIRE(item.quality == 0);
 }
 
 TEST_CASE("'Sulfuras' Quality is 80 and it never alters.")
 {
-    std::vector<ItemPtr> items{
-        make_sulfuras(1)};
-    GildedRose gilded_rose{items};
+    Sulfuras item{1};
 
-    REQUIRE(items[0]->quality == 80);
+    REQUIRE(item.quality == 80);
 
-    gilded_rose.updateQuality();
-    REQUIRE(items[0]->quality == 80);
+    item.update();
+    REQUIRE(item.quality == 80);
+}
+
+TEST_CASE("All items are updated at once")
+{
+    std::vector<ItemPtr> items {
+        make_item("A generic Item", 5, 3),
+        make_aged_brie(2, 6),
+        make_sulfuras(5),
+        make_backstage_pass(0, 9)
+    };
+    GildedRose{items}.updateQuality();
+
+    REQUIRE(items[0]->sellIn == 4);
+    REQUIRE(items[0]->quality == 2);
+    REQUIRE(items[1]->sellIn == 1);
+    REQUIRE(items[1]->quality == 7);
+    REQUIRE(items[2]->sellIn == 5);
+    REQUIRE(items[2]->quality == 80);
+    REQUIRE(items[3]->sellIn == -1);
+    REQUIRE(items[3]->quality == 0);
 }
