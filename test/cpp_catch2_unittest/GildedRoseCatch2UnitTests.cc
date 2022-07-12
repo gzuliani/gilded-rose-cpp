@@ -2,6 +2,7 @@
 #include "Catch.hpp"
 #include "GildedRose.h"
 #include "AgedBrie.h"
+#include "ConjuredItem.h"
 #include "BackstagePass.h"
 #include "Sulfuras.h"
 
@@ -20,6 +21,10 @@ ItemPtr make_aged_brie(int sellIn, int quality) {
 
 ItemPtr make_backstage_pass(int sellIn, int quality) {
     return std::make_shared<BackstagePass>(sellIn, quality);
+}
+
+ItemPtr make_conjured(std::string name, int sellIn, int quality) {
+    return std::make_shared<ConjuredItem>(name, sellIn, quality);
 }
 
 TEST_CASE("At the end of each day SellIn and Quality decrease for every item")
@@ -268,4 +273,28 @@ TEST_CASE("All items are updated at once")
     REQUIRE(items[2]->quality == 80);
     REQUIRE(items[3]->sellIn == -1);
     REQUIRE(items[3]->quality == 0);
+}
+
+TEST_CASE("'Conjured' items degrade in Quality twice as fast as normal items")
+{
+    ConjuredItem item{"A Conjured Item", 2, 9};
+
+    REQUIRE(item.sellIn == 2);
+    REQUIRE(item.quality == 9);
+
+    item.update();
+    REQUIRE(item.sellIn == 1);
+    REQUIRE(item.quality == 7);
+
+    item.update();
+    REQUIRE(item.sellIn == 0);
+    REQUIRE(item.quality == 5);
+
+    item.update();
+    REQUIRE(item.sellIn == -1);
+    REQUIRE(item.quality == 1);
+
+    item.update();
+    REQUIRE(item.sellIn == -2);
+    REQUIRE(item.quality == 0);
 }
