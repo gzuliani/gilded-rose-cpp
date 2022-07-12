@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "Catch.hpp"
 #include "GildedRose.h"
+#include "AgedBrie.h"
 #include "Sulfuras.h"
 
 
@@ -10,6 +11,10 @@ ItemPtr make_item(std::string name, int sellIn, int quality) {
 
 ItemPtr make_sulfuras(int sellIn) {
     return std::make_shared<Sulfuras>(sellIn);
+}
+
+ItemPtr make_aged_brie(int sellIn, int quality) {
+    return std::make_shared<AgedBrie>(sellIn, quality);
 }
 
 TEST_CASE("At the end of each day SellIn and Quality decrease for every item")
@@ -81,7 +86,7 @@ TEST_CASE("The Quality of an item is never negative")
 TEST_CASE("'Aged Brie' actually increases in Quality the older it gets")
 {
     std::vector<ItemPtr> items{
-        make_item("Aged Brie", 3, 2)};
+        make_aged_brie(3, 2)};
     GildedRose gilded_rose{items};
 
     REQUIRE(items[0]->sellIn == 3);
@@ -111,7 +116,7 @@ TEST_CASE("'Aged Brie' actually increases in Quality the older it gets")
 TEST_CASE("The Quality of an item is never more than 50 - 'Aged Brie'")
 {
     std::vector<ItemPtr> items{
-        make_item("Aged Brie", 3, 48)};
+        make_aged_brie(3, 48)};
     GildedRose gilded_rose{items};
 
     REQUIRE(items[0]->quality == 48);
