@@ -10,10 +10,23 @@ public:
     RegularItem(std::string name, int sellIn, int quality)
         : Item(name, sellIn, quality)
     {}
-    virtual void update()
+    void update()
+    {
+        update_quality();
+        clamp_quality();
+        update_sellIn();
+    }
+protected:
+    virtual void update_quality()
     {
         quality -= (sellIn > 0) ? 1 : 2;
-        quality = std::min(std::max(quality, 0), 50); // std::clamp in C++17
+    }
+    virtual void clamp_quality()
+    {
+        quality = std::min(std::max(quality, 0), 50);
+    }
+    virtual void update_sellIn()
+    {
         sellIn -= 1;
     }
 };

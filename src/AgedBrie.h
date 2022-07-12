@@ -9,11 +9,10 @@ public:
     AgedBrie(int sellIn, int quality)
         : RegularItem("Aged Brie", sellIn, quality)
     {}
-    void update() override
+protected:
+    void update_quality() override
     {
         quality += (sellIn > 0) ? 1 : 2;
-        quality = std::min(std::max(quality, 0), 50);
-        sellIn -= 1;
     }
 };
 
