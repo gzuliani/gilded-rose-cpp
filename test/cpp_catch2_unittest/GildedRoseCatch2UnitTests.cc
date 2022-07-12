@@ -3,7 +3,7 @@
 #include "GildedRose.h"
 
 ItemPtr make_item(std::string name, int sellIn, int quality) {
-    return std::make_shared<Item>(name, sellIn, quality);
+    return std::make_shared<RegularItem>(name, sellIn, quality);
 }
 
 TEST_CASE("At the end of each day SellIn and Quality decrease for every item")
