@@ -1,9 +1,15 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "Catch.hpp"
 #include "GildedRose.h"
+#include "Sulfuras.h"
+
 
 ItemPtr make_item(std::string name, int sellIn, int quality) {
     return std::make_shared<RegularItem>(name, sellIn, quality);
+}
+
+ItemPtr make_sulfuras(int sellIn) {
+    return std::make_shared<Sulfuras>(sellIn);
 }
 
 TEST_CASE("At the end of each day SellIn and Quality decrease for every item")
@@ -129,7 +135,7 @@ TEST_CASE("The Quality of an item is never more than 50 - 'Aged Brie'")
 TEST_CASE("'Sulfuras' never has to be sold or decreases in Quality")
 {
     std::vector<ItemPtr> items{
-        make_item("Sulfuras, Hand of Ragnaros", 1, 80)};
+        make_sulfuras(1)};
     GildedRose gilded_rose{items};
 
     REQUIRE(items[0]->sellIn == 1);
@@ -245,11 +251,11 @@ TEST_CASE("'Backstage passes' Quality drops to 0 after the concert")
     REQUIRE(items[0]->sellIn == -1);
     REQUIRE(items[0]->quality == 0);
 }
-/*
+
 TEST_CASE("'Sulfuras' Quality is 80 and it never alters.")
 {
     std::vector<ItemPtr> items{
-        make_item("Sulfuras, Hand of Ragnaros", 1, 5)};
+        make_sulfuras(1)};
     GildedRose gilded_rose{items};
 
     REQUIRE(items[0]->quality == 80);
@@ -257,4 +263,3 @@ TEST_CASE("'Sulfuras' Quality is 80 and it never alters.")
     gilded_rose.updateQuality();
     REQUIRE(items[0]->quality == 80);
 }
-*/
