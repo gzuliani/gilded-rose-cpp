@@ -1,24 +1,25 @@
+#include <memory>
 #include <string>
 #include <vector>
-
-using namespace std;
 
 class Item
 {
 public:
-    string name;
+    std::string name;
     int sellIn;
     int quality;
-    Item(string name, int sellIn, int quality) : name(name), sellIn(sellIn), quality(quality) 
+    Item(std::string name, int sellIn, int quality)
+        : name(name), sellIn(sellIn), quality(quality) 
     {}
 };
+
+using ItemPtr = std::shared_ptr<Item>;
 
 class GildedRose
 {
 public:
-    vector<Item> & items;
-    GildedRose(vector<Item> & items);
+    std::vector<ItemPtr>& items;
+    GildedRose(std::vector<ItemPtr>& items);
     
     void updateQuality();
 };
-
