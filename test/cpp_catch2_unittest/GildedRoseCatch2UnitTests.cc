@@ -2,6 +2,7 @@
 #include "Catch.hpp"
 #include "GildedRose.h"
 #include "AgedBrie.h"
+#include "BackstagePass.h"
 #include "Sulfuras.h"
 
 
@@ -15,6 +16,10 @@ ItemPtr make_sulfuras(int sellIn) {
 
 ItemPtr make_aged_brie(int sellIn, int quality) {
     return std::make_shared<AgedBrie>(sellIn, quality);
+}
+
+ItemPtr make_backstage_pass(int sellIn, int quality) {
+    return std::make_shared<BackstagePass>(sellIn, quality);
 }
 
 TEST_CASE("At the end of each day SellIn and Quality decrease for every item")
@@ -154,7 +159,7 @@ TEST_CASE("'Sulfuras' never has to be sold or decreases in Quality")
 TEST_CASE("'Backstage passes' increases in Quality as SellIn value approaches")
 {
     std::vector<ItemPtr> items{
-        make_item("Backstage passes to a TAFKAL80ETC concert", 20, 3)};
+        make_backstage_pass(20, 3)};
     GildedRose gilded_rose{items};
 
     REQUIRE(items[0]->sellIn == 20);
@@ -172,7 +177,7 @@ TEST_CASE("'Backstage passes' increases in Quality as SellIn value approaches")
 TEST_CASE("'Backstage passes' Quality increases by 2 if SellIn is 10 or less")
 {
     std::vector<ItemPtr> items{
-        make_item("Backstage passes to a TAFKAL80ETC concert", 11, 3)};
+        make_backstage_pass(11, 3)};
     GildedRose gilded_rose{items};
 
     REQUIRE(items[0]->sellIn == 11);
@@ -194,7 +199,7 @@ TEST_CASE("'Backstage passes' Quality increases by 2 if SellIn is 10 or less")
 TEST_CASE("'Backstage passes' Quality increases by 3 if SellIn is 5 or less")
 {
     std::vector<ItemPtr> items{
-        make_item("Backstage passes to a TAFKAL80ETC concert", 6, 3)};
+        make_backstage_pass(6, 3)};
     GildedRose gilded_rose{items};
 
     REQUIRE(items[0]->sellIn == 6);
@@ -216,7 +221,7 @@ TEST_CASE("'Backstage passes' Quality increases by 3 if SellIn is 5 or less")
 TEST_CASE("The Quality of an item is never more than 50 - 'Backstage passes'")
 {
     std::vector<ItemPtr> items{
-        make_item("Backstage passes to a TAFKAL80ETC concert", 3, 48)};
+        make_backstage_pass(3, 48)};
     GildedRose gilded_rose{items};
 
     REQUIRE(items[0]->sellIn == 3);
@@ -238,7 +243,7 @@ TEST_CASE("The Quality of an item is never more than 50 - 'Backstage passes'")
 TEST_CASE("'Backstage passes' Quality drops to 0 after the concert")
 {
     std::vector<ItemPtr> items{
-        make_item("Backstage passes to a TAFKAL80ETC concert", 2, 3)};
+        make_backstage_pass(2, 3)};
     GildedRose gilded_rose{items};
 
     REQUIRE(items[0]->sellIn == 2);
